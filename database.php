@@ -3,9 +3,9 @@ class Database
 {
     private static $dbName = 'bookstore';
     private static $dbHost = 'localhost';
-    private static $dbUsername = '';
+    private static $dbUsername = 'root';
     private static $dbUserPassword = '';
-  //  pricate static $port = 1433;
+
 
     private static $cont = null;
 
@@ -16,7 +16,7 @@ class Database
     public static function connect() {
         if (null === self::$cont) {
             try {
-                self::$cont =  new PDO('mssql:host='.self::$dbHost.'; dbname='.self::$dbName, self::$dbUsername, self::$dbUserPassword);
+                self::$cont =  new PDO('mysql:host='.self::$dbHost.'; dbname='.self::$dbName, self::$dbUsername, self::$dbUserPassword);
             } catch(PDOException $e) {
                 die($e->getMessage());
             }
