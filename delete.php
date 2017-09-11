@@ -1,47 +1,97 @@
 <?php
-    require 'database.php';
+include_once 'dbconfig.php';
+error_reporting(0);
 
-    $id = null;
-    if (!empty($_GET['id'])) {
-        $id = $_REQUEST['id'];
-    }
+if(isset($_POST['submit']))
+{
+	$id = $_GET['delete_id'];
+	$crud->delete($id);
+	header("Location: delete.php?deleted");	
+}
 
-    if (null === $id) {
-        header('Location: index.php');
-    }
-
-    if (!empty($_POST)) {
-        $id = $_POST['id'];
-
-        $pdo = Database::connect();
-        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        $q = $pdo->prepare('DELETE FROM Books WHERE BookID = ?');
-        $q->execute(array($id));
-        Database::disconnect();
-        header('Location: index.php');
-    }
-
-    include 'header.php';
 ?>
 
-//
-<div class="container">
-    <div class="row">
-        <h3>Delete a Book</h3>
-    </div>
+<?php include_once 'header.php'; ?>
 
-    <div class="row">
-        <form class="form-horizontal" action="delete.php" method="post">
-            <input type="hidden" name="id" value="<?php echo $id; ?>">
-            <p class="bg-danger alert">Are you sure you want to delete this Book?</p>
-            <div class="form-group">
-                <div class="col-sm-12 text-center">
-                    <button type="submit" class="btn btn-danger">Yes</button>
-                    <a class="btn btn-default" href="index.php">No</a>
-                </div>
-            </div>
-        </form>
-    </div>
+<div class="clearfix"></div>
+
+<div class="container">
+
+	<?php
+	if(isset($_GET['deleted']))
+	{
+		?>
+        <div class="alert alert-success">
+    	<strong>Success!</strong> record was deleted... 
+		</div>
+        <?php
+	}
+	else
+	{
+		?>
+        <div class="alert alert-danger">
+    	<strong>Sure !</strong> to remove the following record ? 
+		</div>
+        <?php
+	}
+	?>	
 </div>
 
-<?php include 'footer.php'; ?>
+<div class="clearfix"></div>
+
+<div class="container">
+ 	
+	 <?php
+	 if(isset($_GET['delete_id']))
+	 {
+		 ?>
+         <table class='table table-bordered'>
+         <tr>
+         <th>#</th>
+         <th>Title</th>
+         <th>ISBN</th>
+         <th>Price</th>
+         </tr>
+         <?php
+         $stmt = $DB_con->prepare("SELECT BookID, Title, ISBN, Price FROM Books WHERE BookID = ':id' ");
+         $stmt->execute(array(':id'=>$_GET['delete_id']));
+         while($row=$stmt->fetch(PDO::FETCH_BOTH))
+         {
+             ?>
+             <tr>
+             <td><?php print($row['id']); ?></td>
+             <td><?php print($row['title']); ?></td>
+             <td><?php print($row['isbn']); ?></td>
+             <td><?php print($row['price']); ?></td>
+             </tr>
+             <?php
+         }
+         ?>
+         </table>
+         <?php
+	 }
+	 ?>
+</div>
+
+<div class="container">
+<p>
+<?php
+if(isset($_GET['delete_id']))
+{
+	?>
+  	<form method="post">
+    <input type="hidden" name="id" value="<?php echo $row['id']; ?>" />
+    <button class="btn btn-large btn-primary" type="submit" name="submit"><i class="glyphicon glyphicon-trash"></i> &nbsp; YES</button>
+    <a href="index.php" class="btn btn-large btn-success"><i class="glyphicon glyphicon-backward"></i> &nbsp; NO</a>
+    </form>  
+	<?php
+}
+else
+{
+	?>
+    <a href="index.php" class="btn btn-large btn-success"><i class="glyphicon glyphicon-backward"></i> &nbsp; Back to index</a>
+    <?php
+}
+?>
+</p>
+</div>	
