@@ -1,58 +1,43 @@
-<?php require 'header.php'; ?>
+<?php
+include_once 'dbconfig.php';
+error_reporting(0);
+
+?>
+<?php include_once 'header.php'; ?>
+
+<div class="clearfix"></div>
 
 <div class="container">
-    <div class="row">
-        <h3>Bookstore</h3>
-    </div>
-
-    <div class="row">
-        <p><a href="create.php" class="btn btn-success">Create</a></p>
-        <table class="table table-striped table-bordered">
-            <thead>
-                <tr>
-                    <th>BookID</th>
-                    <th>Title</th>
-                    <th>ISBN</th>
-                    <th>Price</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php
-                    require 'database.php';
-
-                    $pdo = Database::connect();
-                    $getBooks = $pdo->prepare('SELECT * FROM Books ORDER BY BookID DESC');
-                    $getBooks->execute();
-
-                    if($getBooks->rowCount() > 0) {
-                        while ($row = $getBooks->fetch()) {
-                            echo '<tr>';
-                            echo '<td>'. $row['BookID'] . '</td>' . PHP_EOL;
-                            echo '<td>'. $row['Title'] . '</td>' . PHP_EOL;
-                            echo '<td>'. $row['ISBN'] . '</td>' . PHP_EOL;
-                            echo '<td>'. $row['Price'] . '</td>' . PHP_EOL;
-                            echo '<td>' . PHP_EOL;
-                            echo '<a class="btn btn-default" href="read.php?id='.$row['BookID'].'">Read</a>' . PHP_EOL;
-                            echo '<a class="btn btn-success" href="update.php?id='.$row['BookID'].'">Update</a>' . PHP_EOL;
-                            echo '<a class="btn btn-danger" href="delete.php?id='.$row['BookID'].'">Delete</a>' . PHP_EOL;
-                            echo '</td>' . PHP_EOL;
-                            echo '</tr>' . PHP_EOL;
-                        }
-                    } else {
-                        echo '<tr>';
-                        echo '<td>Nothing here...</td>' . PHP_EOL;
-                        echo '<td>Nothing here...</td>' . PHP_EOL;
-                        echo '<td>Nothing here...</td>' . PHP_EOL;
-                        echo '<td>Nothing here...</td>' . PHP_EOL;
-                        echo '</tr>';
-                    }
-
-                    Database::disconnect();
-                ?>
-            </tbody>
-        </table>
-    </div>
+<a href="create.php" class="btn btn-large btn-info"><i class="glyphicon glyphicon-plus"></i> &nbsp; Add Records</a>
 </div>
 
-<?php require 'footer.php'; ?>
+<div class="clearfix"></div><br />
+
+<div class="container">
+	 <table class='table table-bordered table-responsive'>
+     <tr>
+     <th>#</th>
+     <th>Title</th>
+     <th>ISBN</th>
+     <th>Price</th>
+     <th colspan="2" align="center">Actions</th>
+     </tr>
+     <?php
+		$query = "SELECT BookID, title, isbn, price FROM Books";
+		$records_per_page=5;
+		$newquery = $crud->paging($query,$records_per_page);
+		$crud->dataview($newquery);
+	 ?>
+    <tr>
+        <td colspan="7" align="center">
+ 			<div class="pagination-wrap">
+            <?php $crud->paginglink($query,$records_per_page); ?>
+        	</div>
+        </td>
+    </tr>
+ 
+</table>
+   
+       
+</div>
+
