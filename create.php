@@ -1,87 +1,86 @@
 <?php
-    require 'database.php';
+error_reporting(0);
+include_once 'dbconfig.php';
+if(isset($_POST['submit']))
+{
+	$title = $_POST['title'];
+	$isbn = $_POST['isbn'];
+	$price = $_POST['price'];
+	
+	
+	if($crud->create($title,$isbn,$price))
+	{
+		header("Location: add-data.php?inserted");
+	}
+	else
+	{
+		header("Location: add-data.php?failure");
+	}
+}
+?>
+<?php include_once 'header.php'; ?>
+<div class="clearfix"></div>
 
-    if (!empty($_POST)) {
-        $titleError = null;
-        $isbnError = null;
-        $priceError = null;
-
-        $title = $_POST['title'];
-        $isbn = $_POST['isbn'];
-        $price = $_POST['price'];
-
-        $valid = true;
-        if (empty($title)) {
-            $titleError = 'Please enter title';
-            $valid = false;
-        }
-
-        if (empty($isbn)) {
-            $isbnError = 'Please enter ISBN';
-            $valid = false;
-        }
-
-        if (empty($price)) {
-            $priceError = 'Please enter price';
-            $valid = false;
-        }
-
-        if ($valid) {
-            $pdo = Database::connect();
-            $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            $sql = 'INSERT INTO Books (Title, ISBN, Price) values(?, ?, ?)';
-            $q = $pdo->prepare($sql);
-            $q->execute(array($title, $isbn, $price));
-            Database::disconnect();
-            header('Location: index.php');
-        }
-    }
-
-    require 'header.php';
+<?php
+if(isset($_GET['inserted']))
+{
+	?>
+    <div class="container">
+	<div class="alert alert-info">
+    <strong>WOW!</strong> Record was inserted successfully <a href="index.php">HOME</a>!
+	</div>
+	</div>
+    <?php
+}
+else if(isset($_GET['failure']))
+{
+	?>
+    <div class="container">
+	<div class="alert alert-warning">
+    <strong>SORRY!</strong> ERROR while inserting record !
+	</div>
+	</div>
+    <?php
+}
 ?>
 
-<div class="container">
-    <div class="row">
-        <h3>Create a Book</h3>
-    </div>
+<div class="clearfix"></div><br />
 
-    <div class="row">
-        <form class="form-horizontal" action="create.php" method="post">
-            <div class="form-group <?php echo !empty($titleError) ? 'has-error' : ''; ?>">
-                <label class="col-sm-2 control-label">Title</label>
-                <div class="controls col-sm-6">
-                    <input class="form-control" name="title" type="text" placeholder="Title" value="<?php echo !empty($title) ? $title : ''; ?>">
-                    <?php if (!empty($titleError)): ?>
-                        <span class="help-block"><?php echo $titleError;?></span>
-                    <?php endif; ?>
-                </div>
-            </div>
-            <div class="form-group <?php echo !empty($priceError) ? 'has-error' : ''; ?>">
-                <label class="col-sm-2 control-label">ISBN</label>
-                <div class="controls col-sm-6">
-                    <input class="form-control" name="isbn" type="text" placeholder="ISBN" value="<?php echo !empty($isbn) ? $isbn : ''; ?>">
-                    <?php if (!empty($isbnError)): ?>
-                        <span class="help-block"><?php echo $isbnError;?></span>
-                    <?php endif;?>
-                </div>
-            </div>
-            <div class="form-group <?php echo !empty($priceError) ? 'has-error' : ''; ?>">
-                <label class="col-sm-2 control-label">Price</label>
-                <div class="controls col-sm-6">
-                    <input class="form-control" name="price" type="text" placeholder="Price" value="<?php echo !empty($price) ? $price : ''; ?>">
-                    <?php if (!empty($priceError)): ?>
-                        <span class="help-block"><?php echo $priceError;?></span>
-                    <?php endif;?>
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="col-sm-offset-2 col-sm-10">
-                    <button type="submit" class="btn btn-success">Create</button>
-                    <a class="btn btn-default" href="index.php">Back</a>
-                </div>
-            </div>
-        </form>
-    </div>
+<div class="container">
+
+ 	
+	 <form method='post'>
+ 
+    <table class='table table-bordered'>
+ 
+        <tr>
+            <td>Title</td>
+            <td><input type='text' name='title' class='form-control' required></td>
+        </tr>
+ 
+        <tr>
+            <td>ISBN</td>
+            <td><input type='text' name='isbn' class='form-control' required></td>
+        </tr>
+ 
+        <tr>
+            <td>Price</td>
+            <td><input type='text' name='price' class='form-control' required></td>
+        </tr>
+ 
+        <tr>
+            <td colspan="2">
+            <button type="submit" class="btn btn-primary" name="submit">
+    		<span class="glyphicon glyphicon-plus"></span> Create New Book Record
+			</button>  
+            <a href="index.php" class="btn btn-large btn-success"><i class="glyphicon glyphicon-backward"></i> &nbsp; Back to index</a>
+            </td>
+        </tr>
+ 
+    </table>
+</form>
+     
+     
 </div>
 
-<?php require 'footer.php'; ?>
+<?php include_once 'footer.php'; ?>
