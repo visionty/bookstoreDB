@@ -1,30 +1,23 @@
 <?php
-class Database
+
+$DB_host = "localhost";
+$DB_user = "root";
+$DB_pass = NULL;
+$DB_name = "bookstore";
+
+
+try
 {
-    private static $dbName = 'bookstore';
-    private static $dbHost = 'localhost';
-    private static $dbUsername = 'root';
-    private static $dbUserPassword = '';
-
-
-    private static $cont = null;
-
-    public function __construct() {
-        die('Init function is not allowed');
-    }
-
-    public static function connect() {
-        if (null === self::$cont) {
-            try {
-                self::$cont =  new PDO('mysql:host='.self::$dbHost.'; dbname='.self::$dbName, self::$dbUsername, self::$dbUserPassword);
-            } catch(PDOException $e) {
-                die($e->getMessage());
-            }
-        }
-        return self::$cont;
-    }
-
-    public static function disconnect() {
-        self::$cont = null;
-    }
+	$DB_con = new PDO("mysql:host={$DB_host};dbname={$DB_name}",$DB_user,$DB_pass);
+	$DB_con->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 }
+catch(PDOException $e)
+{
+	echo $e->getMessage();
+}
+
+include_once 'class.crud.php';
+
+$crud = new crud($DB_con);
+
+?>
