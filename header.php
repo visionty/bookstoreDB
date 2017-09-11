@@ -1,8 +1,19 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
 <head>
-    <meta charset="utf-8">
-    <title>Bookstore</title>
-    <link rel="stylesheet" type="text/css" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Bookstore</title>
+<link href="bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen"> 
 </head>
+
 <body>
+
+<div class="navbar navbar-default navbar-static-top" role="navigation">
+    <div class="container">
+ 
+        <div class="navbar-header">
+            <h3>Bookstore</h3>
+        </div>
+ 
+    </div>
+</div>
