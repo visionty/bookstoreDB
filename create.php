@@ -83,4 +83,3 @@ else if(isset($_GET['failure']))
      
 </div>
 
-<?php include_once 'footer.php'; ?>
